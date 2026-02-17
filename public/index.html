@@ -17,42 +17,47 @@
     body {
       font-family: system-ui, -apple-system, sans-serif;
       margin: 0;
-      padding: 16px;
+      padding: 12px;
       background: var(--tg-theme-bg-color, var(--black-bg));
       color: var(--tg-theme-text-color, var(--gold-accent));
       display: flex;
       flex-direction: column;
       height: 100vh;
       box-sizing: border-box;
-      overscroll-behavior: none; /* No scroll bounce */
+      overscroll-behavior: none;
     }
     h2 {
       text-align: center;
       color: var(--gold-accent);
-      margin: 0 0 16px;
-      font-size: 24px;
+      margin: 8px 0 12px 0;
+      font-size: 20px;
+      flex-shrink: 0;
     }
     form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 4px;
     }
     label {
-      font-size: 16px;
+      font-size: 14px;
       color: var(--gold-accent);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+      font-weight: 600;
     }
     input, select {
-      padding: 12px; /* Finger-friendly */
-      font-size: 18px;
+      padding: 10px;
+      font-size: 16px;
       border: 2px solid var(--gold-accent);
-      border-radius: 8px;
-      background: #1A1A1A; /* Dark gray for inputs */
+      border-radius: 6px;
+      background: #1A1A1A;
       color: var(--gold-accent);
       width: 100%;
       box-sizing: border-box;
-      touch-action: manipulation; /* Better touch */
+      touch-action: manipulation;
     }
     input[type="date"] {
       appearance: none;
@@ -65,98 +70,110 @@
     /* Type Selection Buttons */
     .type-buttons {
       display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
     .type-btn {
       flex: 1;
-      padding: 16px;
-      font-size: 18px;
+      padding: 12px;
+      font-size: 16px;
       font-weight: bold;
-      border: 3px solid var(--gold-accent);
-      border-radius: 8px;
+      border: 2px solid var(--gold-accent);
+      border-radius: 6px;
       background: transparent;
       color: var(--gold-accent);
       cursor: pointer;
       touch-action: manipulation;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 44px;
     }
     .type-btn.active {
       background: var(--gold-accent);
       color: var(--black-bg);
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
     }
     .type-btn:active {
-      transform: scale(0.95);
+      transform: scale(0.98);
     }
 
     /* Calendar Picker */
     .calendar-container {
       background: #1A1A1A;
       border: 2px solid var(--gold-accent);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 12px;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
     }
     .calendar-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      gap: 8px;
+      margin-bottom: 10px;
+      gap: 6px;
     }
     .calendar-header button {
-      padding: 8px 12px;
-      font-size: 16px;
+      padding: 6px 10px;
+      font-size: 14px;
       background: var(--gold-accent);
       color: var(--black-bg);
       border: none;
       border-radius: 4px;
       cursor: pointer;
       touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      font-weight: bold;
+      min-height: 40px;
+      min-width: 40px;
     }
     .calendar-header h3 {
       flex: 1;
       text-align: center;
       margin: 0;
       color: var(--gold-accent);
-      font-size: 18px;
+      font-size: 14px;
+      font-weight: 600;
     }
     .weekdays {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      margin-bottom: 8px;
+      gap: 2px;
+      margin-bottom: 4px;
     }
     .weekday {
       text-align: center;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 10px;
       color: var(--gold-light);
-      padding: 4px;
+      padding: 2px;
     }
     .days {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
+      gap: 2px;
     }
     .day {
-      aspect-ratio: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
       font-weight: 500;
+      font-size: 12px;
       border: 1px solid transparent;
       touch-action: manipulation;
       user-select: none;
-      min-height: 44px;
+      min-height: 36px;
+      min-width: 36px;
+      padding: 2px;
+      -webkit-tap-highlight-color: transparent;
     }
     .day.other-month {
       color: #555;
+      cursor: default;
     }
     .day.selectable {
       color: var(--gold-accent);
@@ -164,14 +181,14 @@
     }
     .day.selectable:active {
       background: rgba(255, 215, 0, 0.2);
-      transform: scale(0.9);
+      transform: scale(0.92);
     }
     .day.selected {
       background: var(--gold-accent);
       color: var(--black-bg);
       border: 2px solid var(--gold-light);
       font-weight: bold;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
     }
     .day.today {
       border: 2px solid var(--gold-accent);
@@ -190,108 +207,123 @@
     }
 
     button[type="submit"] {
-      padding: 16px;
-      font-size: 20px;
+      padding: 14px;
+      font-size: 18px;
       background: var(--gold-accent);
       color: var(--black-bg);
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      margin-top: auto;
       touch-action: manipulation;
       font-weight: bold;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 48px;
+      margin-top: 8px;
+      flex-shrink: 0;
     }
-    button[type="submit"]:hover, button[type="submit"]:active {
+    button[type="submit"]:active {
       background: var(--gold-light);
       transform: scale(0.98);
     }
     .error {
       color: var(--error-red);
-      font-size: 14px;
-      margin-top: -8px;
+      font-size: 12px;
+      margin-top: -6px;
     }
-    @media (max-height: 600px) { /* Small screens */
+    
+    /* Hide form wrapper styling */
+    form > div {
+      flex-shrink: 0;
+    }
+    
+    @media (max-height: 600px) {
       padding: 8px;
-      gap: 8px;
+      h2 { font-size: 18px; margin: 4px 0 8px 0; }
+      label { font-size: 13px; }
+      .type-btn { padding: 10px; min-height: 40px; }
+      input { padding: 8px; font-size: 14px; }
+      button[type="submit"] { padding: 12px; font-size: 16px; min-height: 44px; }
     }
   </style>
 </head>
 <body>
-  <h2>Goldy - Transaction App</h2>
+  <h2>💰 Goldy</h2>
   <form id="txForm">
-    <!-- Buy/Sell Buttons -->
-    <div>
-      <label>Transaction Type:</label>
-      <div class="type-buttons">
-        <button type="button" class="type-btn" data-type="buy">🔵 Buy</button>
-        <button type="button" class="type-btn" data-type="sell">🔴 Sell</button>
+    <div style="flex: 1; overflow-y: auto; padding-right: 4px;">
+      <!-- Buy/Sell Buttons -->
+      <div>
+        <label>Type:</label>
+        <div class="type-buttons">
+          <button type="button" class="type-btn" data-type="buy">🔵 BUY</button>
+          <button type="button" class="type-btn" data-type="sell">🔴 SELL</button>
+        </div>
+        <input type="hidden" id="type" required>
+        <span class="error" id="typeError"></span>
       </div>
-      <input type="hidden" id="type" required>
-      <span class="error" id="typeError"></span>
+
+      <!-- Calendar Picker -->
+      <div>
+        <label for="date">Date:</label>
+        <div class="calendar-container" id="calendarContainer">
+          <div class="calendar-header">
+            <button type="button" id="prevMonth">◀</button>
+            <h3 id="monthYear"></h3>
+            <button type="button" id="nextMonth">▶</button>
+          </div>
+          <div class="weekdays">
+            <div class="weekday">Sun</div>
+            <div class="weekday">Mon</div>
+            <div class="weekday">Tue</div>
+            <div class="weekday">Wed</div>
+            <div class="weekday">Thu</div>
+            <div class="weekday">Fri</div>
+            <div class="weekday">Sat</div>
+          </div>
+          <div class="days" id="calendarDays"></div>
+        </div>
+        <div style="text-align: center; color: var(--gold-accent); font-size: 14px; margin-bottom: 10px; font-weight: 600;" id="selectedDate">No date selected</div>
+        <input type="hidden" id="date" required>
+        <span class="error" id="dateError"></span>
+      </div>
+
+      <label for="xgt">XGT Tokens:</label>
+      <input type="number" id="xgt" min="0.01" step="0.01" placeholder="100.00" required>
+      <span class="error" id="xgtError"></span>
+
+      <label for="toz">Gold Weight (toz):</label>
+      <input type="number" id="toz" min="0.01" step="0.01" placeholder="1.50" required>
+      <span class="error" id="tozError"></span>
+
+      <label for="hkd">Amount (HKD):</label>
+      <input type="number" id="hkd" min="0.01" step="0.01" placeholder="5000.00" required>
+      <span class="error" id="hkdError"></span>
     </div>
 
-    <!-- Calendar Picker -->
-    <label for="date">Date:</label>
-    <div class="calendar-container" id="calendarContainer">
-      <div class="calendar-header">
-        <button type="button" id="prevMonth">◀</button>
-        <h3 id="monthYear"></h3>
-        <button type="button" id="nextMonth">▶</button>
-      </div>
-      <div class="weekdays">
-        <div class="weekday">Sun</div>
-        <div class="weekday">Mon</div>
-        <div class="weekday">Tue</div>
-        <div class="weekday">Wed</div>
-        <div class="weekday">Thu</div>
-        <div class="weekday">Fri</div>
-        <div class="weekday">Sat</div>
-      </div>
-      <div class="days" id="calendarDays"></div>
-    </div>
-    <input type="hidden" id="date" required>
-    <div style="text-align: center; color: var(--gold-accent); font-size: 16px; margin-bottom: 12px;" id="selectedDate">No date selected</div>
-    <span class="error" id="dateError"></span>
-
-    <label for="xgt">XGT Tokens:</label>
-    <input type="number" id="xgt" min="0.01" step="0.01" placeholder="e.g. 100.00" required>
-    <span class="error" id="xgtError"></span>
-
-    <label for="toz">Gold Weight (toz):</label>
-    <input type="number" id="toz" min="0.01" step="0.01" placeholder="e.g. 1.50" required>
-    <span class="error" id="tozError"></span>
-
-    <label for="hkd">Amount (HKD):</label>
-    <input type="number" id="hkd" min="0.01" step="0.01" placeholder="e.g. 5000.00" required>
-    <span class="error" id="hkdError"></span>
-
-    <button type="submit">Submit Transaction</button>
+    <button type="submit">✓ Submit</button>
   </form>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
-    tg.expand(); // Full-screen
+    tg.expand();
 
-    // SOTA: Use SDK for haptics (if loaded)
-    const { init, HapticFeedback } = window.telegramAppsSDK || {};
+    // Haptics
+    const { HapticFeedback } = window.telegramAppsSDK || {};
     const haptic = HapticFeedback ? new HapticFeedback() : null;
 
-    // ========== Calendar Logic ==========
     let currentMonth = new Date();
     let selectedDate = new Date();
 
+    // ========== CALENDAR ==========
     function renderCalendar() {
       const year = currentMonth.getFullYear();
       const month = currentMonth.getMonth();
       const today = new Date();
       
-      // Update header
       document.getElementById('monthYear').textContent = 
-        currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        currentMonth.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
       
-      // Get first day of month and number of days
       const firstDay = new Date(year, month, 1).getDay();
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       const daysInPrevMonth = new Date(year, month, 0).getDate();
@@ -299,7 +331,7 @@
       const daysContainer = document.getElementById('calendarDays');
       daysContainer.innerHTML = '';
       
-      // Previous month's days
+      // Previous month days
       for (let i = firstDay - 1; i >= 0; i--) {
         const day = document.createElement('div');
         day.className = 'day other-month';
@@ -307,7 +339,7 @@
         daysContainer.appendChild(day);
       }
       
-      // Current month's days
+      // Current month days
       for (let i = 1; i <= daysInMonth; i++) {
         const day = document.createElement('div');
         day.className = 'day selectable';
@@ -315,22 +347,21 @@
         
         const dateObj = new Date(year, month, i);
         
-        // Highlight today
         if (dateObj.toDateString() === today.toDateString()) {
           day.classList.add('today');
         }
         
-        // Highlight selected date
         if (dateObj.toDateString() === selectedDate.toDateString()) {
           day.classList.add('selected');
         }
         
-        // Click handler
-        day.addEventListener('click', () => {
+        day.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           selectedDate = new Date(dateObj);
           document.getElementById('date').value = selectedDate.toISOString().split('T')[0];
           document.getElementById('selectedDate').textContent = 
-            selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
           renderCalendar();
           if (haptic) haptic.selectionChanged();
         });
@@ -338,9 +369,9 @@
         daysContainer.appendChild(day);
       }
       
-      // Next month's days
+      // Next month days
       const totalCells = daysContainer.children.length;
-      const remainingCells = 42 - totalCells; // 6 rows × 7 days
+      const remainingCells = 42 - totalCells;
       for (let i = 1; i <= remainingCells; i++) {
         const day = document.createElement('div');
         day.className = 'day other-month';
@@ -349,7 +380,7 @@
       }
     }
 
-    // Calendar navigation
+    // Calendar buttons
     document.getElementById('prevMonth').addEventListener('click', (e) => {
       e.preventDefault();
       currentMonth.setMonth(currentMonth.getMonth() - 1);
@@ -364,11 +395,12 @@
       if (haptic) haptic.selectionChanged();
     });
 
-    // ========== Type Selection (Buy/Sell) ==========
+    // ========== TYPE SELECTION ==========
     const typeButtons = document.querySelectorAll('.type-btn');
     typeButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         typeButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById('type').value = btn.dataset.type;
@@ -376,12 +408,13 @@
       });
     });
 
-    // ========== Form Submission ==========
+    // ========== FORM SUBMISSION ==========
     const form = document.getElementById('txForm');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const errors = document.querySelectorAll('.error');
-      errors.forEach(el => el.textContent = '');
+      
+      // Clear errors
+      document.querySelectorAll('.error').forEach(el => el.textContent = '');
 
       const data = {
         transactionDate: document.getElementById('date').value,
@@ -394,34 +427,46 @@
 
       // Validation
       let valid = true;
-      if (!data.transactionDate) { document.getElementById('dateError').textContent = 'Select a date'; valid = false; }
-      if (!data.type) { document.getElementById('typeError').textContent = 'Select Buy or Sell'; valid = false; }
-      if (isNaN(data.totalTokenXgt) || data.totalTokenXgt <= 0) { document.getElementById('xgtError').textContent = 'Positive number >0'; valid = false; }
-      if (isNaN(data.goldWeightOunces) || data.goldWeightOunces <= 0) { document.getElementById('tozError').textContent = 'Positive number >0'; valid = false; }
-      if (isNaN(data.amountHkd) || data.amountHkd <= 0) { document.getElementById('hkdError').textContent = 'Positive number >0'; valid = false; }
+      if (!data.transactionDate) { 
+        document.getElementById('dateError').textContent = 'Select a date'; 
+        valid = false; 
+      }
+      if (!data.type) { 
+        document.getElementById('typeError').textContent = 'Select Buy or Sell'; 
+        valid = false; 
+      }
+      if (isNaN(data.totalTokenXgt) || data.totalTokenXgt <= 0) { 
+        document.getElementById('xgtError').textContent = 'Positive number >0'; 
+        valid = false; 
+      }
+      if (isNaN(data.goldWeightOunces) || data.goldWeightOunces <= 0) { 
+        document.getElementById('tozError').textContent = 'Positive number >0'; 
+        valid = false; 
+      }
+      if (isNaN(data.amountHkd) || data.amountHkd <= 0) { 
+        document.getElementById('hkdError').textContent = 'Positive number >0'; 
+        valid = false; 
+      }
 
-      if (!valid && haptic) haptic.notificationOccurred('error');
+      if (!valid) {
+        if (haptic) haptic.notificationOccurred('error');
+        return;
+      }
 
-      if (valid) {
-        const confirmMsg = `Confirm: ${data.type.toUpperCase()} ${data.totalTokenXgt.toFixed(2)} XGT (${data.goldWeightOunces.toFixed(2)} toz) for ${data.amountHkd.toFixed(2)} HKD on ${data.transactionDate}?`;
-        if (confirm(confirmMsg)) {
-          tg.MainButton.setText('Submitting...').show();
-          tg.sendData(JSON.stringify(data));
-          if (haptic) haptic.notificationOccurred('success');
-          tg.MainButton.hide();
-        }
+      const confirmMsg = `Confirm ${data.type.toUpperCase()}?\n${data.totalTokenXgt} XGT\n${data.amountHkd} HKD\n${data.transactionDate}`;
+      if (confirm(confirmMsg)) {
+        tg.MainButton.setText('Submitting...').show();
+        tg.sendData(JSON.stringify(data));
+        if (haptic) haptic.notificationOccurred('success');
+        tg.MainButton.hide();
       }
     });
 
-    // ========== Initialization ==========
-    tg.onEvent('themeChanged', () => document.body.style.background = tg.themeParams.bg_color || var(--black-bg));
-    
-    // Set today as default selected date
+    // ========== INIT ==========
     selectedDate = new Date();
-    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('date').value = selectedDate.toISOString().split('T')[0];
     document.getElementById('selectedDate').textContent = 
-      selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    
+      selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     renderCalendar();
   </script>
 </body>
