@@ -1,33 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GOLDY Test Mini App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Goldy - Transaction App</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Optional SOTA SDK for better typing/haptics (small bundle) -->
+  <script src="https://unpkg.com/@telegram-apps/sdk@2.3.0/dist/telegram-apps-sdk.umd.js"></script>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; background: #f0f0f0; color: #333; text-align: center; }
-    h1 { color: #0088cc; }
-    button { padding: 12px 24px; font-size: 18px; background: #0088cc; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    :root {
+      --black-bg: #000000; /* Primary black */
+      --gold-accent: #FFD700; /* Gold */
+      --gold-light: #FFEB3B; /* Lighter gold for hover */
+      --error-red: #FF4500; /* Orange-red for errors */
+    }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: var(--tg-theme-bg-color, var(--black-bg));
+      color: var(--tg-theme-text-color, var(--gold-accent));
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      box-sizing: border-box;
+      overscroll-behavior: none; /* No scroll bounce */
+    }
+    h2 {
+      text-align: center;
+      color: var(--gold-accent);
+      margin: 0 0 16px;
+      font-size: 24px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+    label {
+      font-size: 16px;
+      color: var(--gold-accent);
+      margin-bottom: 4px;
+    }
+    input, select {
+      padding: 12px; /* Finger-friendly */
+      font-size: 18px;
+      border: 2px solid var(--gold-accent);
+      border-radius: 8px;
+      background: #1A1A1A; /* Dark gray for inputs */
+      color: var(--gold-accent);
+      width: 100%;
+      box-sizing: border-box;
+      touch-action: manipulation; /* Better touch */
+    }
+    input[type="date"] {
+      appearance: none; /* Native calendar */
+    }
+    input:focus, select:focus {
+      border-color: var(--gold-light);
+      outline: none;
+    }
+    button {
+      padding: 16px; /* Large tap area */
+      font-size: 20px;
+      background: var(--gold-accent);
+      color: var(--black-bg);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: auto; /* Stick to bottom */
+      touch-action: manipulation;
+    }
+    button:hover, button:active {
+      background: var(--gold-light);
+    }
+    .error {
+      color: var(--error-red);
+      font-size: 14px;
+      margin-top: -8px;
+    }
+    @media (max-height: 600px) { /* Small screens */
+      padding: 8px;
+      gap: 8px;
+    }
   </style>
 </head>
 <body>
-  <h1>Hello from GOLDY Mini App!</h1>
-  <p id="user">Loading user info...</p>
-  <button onclick="Telegram.WebApp.showAlert('Test successful! 👋')">Show Telegram Alert</button>
+  <h2>Goldy - Transaction App</h2>
+  <form id="txForm">
+    <label for="date">Date:</label>
+    <input type="date" id="date" required>
+    <span class="error" id="dateError"></span>
+
+    <label for="type">Type:</label>
+    <select id="type" required>
+      <option value="">Select Buy/Sell</option>
+      <option value="buy">Buy</option>
+      <option value="sell">Sell</option>
+    </select>
+    <span class="error" id="typeError"></span>
+
+    <label for="xgt">XGT Tokens:</label>
+    <input type="number" id="xgt" min="0.01" step="0.01" placeholder="e.g. 100.00" required>
+    <span class="error" id="xgtError"></span>
+
+    <label for="toz">Gold Weight (toz):</label>
+    <input type="number" id="toz" min="0.01" step="0.01" placeholder="e.g. 1.50" required>
+    <span class="error" id="tozError"></span>
+
+    <label for="hkd">Amount (HKD):</label>
+    <input type="number" id="hkd" min="0.01" step="0.01" placeholder="e.g. 5000.00" required>
+    <span class="error" id="hkdError"></span>
+
+    <button type="submit">Submit Transaction</button>
+  </form>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
-    tg.expand(); // Makes it full-screen
+    tg.expand(); // Full-screen
 
-    // Show who is using it (from Telegram)
-    if (tg.initDataUnsafe.user) {
-      document.getElementById('user').innerText = 
-        `Welcome, ${tg.initDataUnsafe.user.first_name || 'User'}! (ID: ${tg.initDataUnsafe.user.id})`;
-    } else {
-      document.getElementById('user').innerText = "User info not loaded (test mode?)";
-    }
+    // SOTA: Use SDK for haptics (if loaded)
+    const { init, HapticFeedback } = window.telegramAppsSDK || {};
+    const haptic = HapticFeedback ? new HapticFeedback() : null;
+
+    const form = document.getElementById('txForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const errors = document.querySelectorAll('.error');
+      errors.forEach(el => el.textContent = '');
+
+      const data = {
+        transactionDate: document.getElementById('date').value,
+        type: document.getElementById('type').value,
+        totalTokenXgt: parseFloat(document.getElementById('xgt').value),
+        goldWeightOunces: parseFloat(document.getElementById('toz').value),
+        amountHkd: parseFloat(document.getElementById('hkd').value),
+        idempotencyKey: crypto.randomUUID() // SOTA: Dedup prevention
+      };
+
+      // Local validation (SOTA: Comprehensive checks)
+      let valid = true;
+      if (!data.transactionDate) { document.getElementById('dateError').textContent = 'Select a date'; valid = false; }
+      if (!data.type) { document.getElementById('typeError').textContent = 'Select type'; valid = false; }
+      if (isNaN(data.totalTokenXgt) || data.totalTokenXgt <= 0) { document.getElementById('xgtError').textContent = 'Positive number >0'; valid = false; }
+      if (isNaN(data.goldWeightOunces) || data.goldWeightOunces <= 0) { document.getElementById('tozError').textContent = 'Positive number >0'; valid = false; }
+      if (isNaN(data.amountHkd) || data.amountHkd <= 0) { document.getElementById('hkdError').textContent = 'Positive number >0'; valid = false; }
+
+      if (!valid && haptic) haptic.notificationOccurred('error'); // SOTA: Error haptic
+
+      if (valid) {
+        const confirmMsg = `Confirm: ${data.type.toUpperCase()} ${data.totalTokenXgt.toFixed(2)} XGT (${data.goldWeightOunces.toFixed(2)} toz) for ${data.amountHkd.toFixed(2)} HKD on ${data.transactionDate}?`;
+        if (confirm(confirmMsg)) {
+          tg.MainButton.setText('Submitting...').show();
+          tg.sendData(JSON.stringify(data)); // Sends to backend
+          if (haptic) haptic.notificationOccurred('success'); // SOTA: Success haptic
+          tg.MainButton.hide();
+        }
+      }
+    });
+
+    // SOTA: Theme listener + default date (today in HKT)
+    tg.onEvent('themeChanged', () => document.body.style.background = tg.themeParams.bg_color || var(--black-bg));
+    document.getElementById('date').value = new Date().toISOString().split('T')[0]; // Today default
   </script>
 </body>
 </html>
