@@ -55,25 +55,156 @@
       touch-action: manipulation; /* Better touch */
     }
     input[type="date"] {
-      appearance: none; /* Native calendar */
+      appearance: none;
     }
     input:focus, select:focus {
       border-color: var(--gold-light);
       outline: none;
     }
-    button {
-      padding: 16px; /* Large tap area */
+
+    /* Type Selection Buttons */
+    .type-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .type-btn {
+      flex: 1;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: bold;
+      border: 3px solid var(--gold-accent);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--gold-accent);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .type-btn.active {
+      background: var(--gold-accent);
+      color: var(--black-bg);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+    .type-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Calendar Picker */
+    .calendar-container {
+      background: #1A1A1A;
+      border: 2px solid var(--gold-accent);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 8px;
+    }
+    .calendar-header button {
+      padding: 8px 12px;
+      font-size: 16px;
+      background: var(--gold-accent);
+      color: var(--black-bg);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .calendar-header h3 {
+      flex: 1;
+      text-align: center;
+      margin: 0;
+      color: var(--gold-accent);
+      font-size: 18px;
+    }
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    .weekday {
+      text-align: center;
+      font-weight: bold;
+      font-size: 12px;
+      color: var(--gold-light);
+      padding: 4px;
+    }
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      border: 1px solid transparent;
+      touch-action: manipulation;
+      user-select: none;
+      min-height: 44px;
+    }
+    .day.other-month {
+      color: #555;
+    }
+    .day.selectable {
+      color: var(--gold-accent);
+      border: 1px solid var(--gold-accent);
+    }
+    .day.selectable:active {
+      background: rgba(255, 215, 0, 0.2);
+      transform: scale(0.9);
+    }
+    .day.selected {
+      background: var(--gold-accent);
+      color: var(--black-bg);
+      border: 2px solid var(--gold-light);
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+    .day.today {
+      border: 2px solid var(--gold-accent);
+    }
+
+    input {
+      padding: 12px;
+      font-size: 18px;
+      border: 2px solid var(--gold-accent);
+      border-radius: 8px;
+      background: #1A1A1A;
+      color: var(--gold-accent);
+      width: 100%;
+      box-sizing: border-box;
+      touch-action: manipulation;
+    }
+
+    button[type="submit"] {
+      padding: 16px;
       font-size: 20px;
       background: var(--gold-accent);
       color: var(--black-bg);
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      margin-top: auto; /* Stick to bottom */
+      margin-top: auto;
       touch-action: manipulation;
+      font-weight: bold;
+      transition: all 0.2s ease;
     }
-    button:hover, button:active {
+    button[type="submit"]:hover, button[type="submit"]:active {
       background: var(--gold-light);
+      transform: scale(0.98);
     }
     .error {
       color: var(--error-red);
@@ -89,17 +220,39 @@
 <body>
   <h2>Goldy - Transaction App</h2>
   <form id="txForm">
-    <label for="date">Date:</label>
-    <input type="date" id="date" required>
-    <span class="error" id="dateError"></span>
+    <!-- Buy/Sell Buttons -->
+    <div>
+      <label>Transaction Type:</label>
+      <div class="type-buttons">
+        <button type="button" class="type-btn" data-type="buy">🔵 Buy</button>
+        <button type="button" class="type-btn" data-type="sell">🔴 Sell</button>
+      </div>
+      <input type="hidden" id="type" required>
+      <span class="error" id="typeError"></span>
+    </div>
 
-    <label for="type">Type:</label>
-    <select id="type" required>
-      <option value="">Select Buy/Sell</option>
-      <option value="buy">Buy</option>
-      <option value="sell">Sell</option>
-    </select>
-    <span class="error" id="typeError"></span>
+    <!-- Calendar Picker -->
+    <label for="date">Date:</label>
+    <div class="calendar-container" id="calendarContainer">
+      <div class="calendar-header">
+        <button type="button" id="prevMonth">◀</button>
+        <h3 id="monthYear"></h3>
+        <button type="button" id="nextMonth">▶</button>
+      </div>
+      <div class="weekdays">
+        <div class="weekday">Sun</div>
+        <div class="weekday">Mon</div>
+        <div class="weekday">Tue</div>
+        <div class="weekday">Wed</div>
+        <div class="weekday">Thu</div>
+        <div class="weekday">Fri</div>
+        <div class="weekday">Sat</div>
+      </div>
+      <div class="days" id="calendarDays"></div>
+    </div>
+    <input type="hidden" id="date" required>
+    <div style="text-align: center; color: var(--gold-accent); font-size: 16px; margin-bottom: 12px;" id="selectedDate">No date selected</div>
+    <span class="error" id="dateError"></span>
 
     <label for="xgt">XGT Tokens:</label>
     <input type="number" id="xgt" min="0.01" step="0.01" placeholder="e.g. 100.00" required>
@@ -125,6 +278,105 @@
     const { init, HapticFeedback } = window.telegramAppsSDK || {};
     const haptic = HapticFeedback ? new HapticFeedback() : null;
 
+    // ========== Calendar Logic ==========
+    let currentMonth = new Date();
+    let selectedDate = new Date();
+
+    function renderCalendar() {
+      const year = currentMonth.getFullYear();
+      const month = currentMonth.getMonth();
+      const today = new Date();
+      
+      // Update header
+      document.getElementById('monthYear').textContent = 
+        currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      
+      // Get first day of month and number of days
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const daysInPrevMonth = new Date(year, month, 0).getDate();
+      
+      const daysContainer = document.getElementById('calendarDays');
+      daysContainer.innerHTML = '';
+      
+      // Previous month's days
+      for (let i = firstDay - 1; i >= 0; i--) {
+        const day = document.createElement('div');
+        day.className = 'day other-month';
+        day.textContent = daysInPrevMonth - i;
+        daysContainer.appendChild(day);
+      }
+      
+      // Current month's days
+      for (let i = 1; i <= daysInMonth; i++) {
+        const day = document.createElement('div');
+        day.className = 'day selectable';
+        day.textContent = i;
+        
+        const dateObj = new Date(year, month, i);
+        
+        // Highlight today
+        if (dateObj.toDateString() === today.toDateString()) {
+          day.classList.add('today');
+        }
+        
+        // Highlight selected date
+        if (dateObj.toDateString() === selectedDate.toDateString()) {
+          day.classList.add('selected');
+        }
+        
+        // Click handler
+        day.addEventListener('click', () => {
+          selectedDate = new Date(dateObj);
+          document.getElementById('date').value = selectedDate.toISOString().split('T')[0];
+          document.getElementById('selectedDate').textContent = 
+            selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+          renderCalendar();
+          if (haptic) haptic.selectionChanged();
+        });
+        
+        daysContainer.appendChild(day);
+      }
+      
+      // Next month's days
+      const totalCells = daysContainer.children.length;
+      const remainingCells = 42 - totalCells; // 6 rows × 7 days
+      for (let i = 1; i <= remainingCells; i++) {
+        const day = document.createElement('div');
+        day.className = 'day other-month';
+        day.textContent = i;
+        daysContainer.appendChild(day);
+      }
+    }
+
+    // Calendar navigation
+    document.getElementById('prevMonth').addEventListener('click', (e) => {
+      e.preventDefault();
+      currentMonth.setMonth(currentMonth.getMonth() - 1);
+      renderCalendar();
+      if (haptic) haptic.selectionChanged();
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', (e) => {
+      e.preventDefault();
+      currentMonth.setMonth(currentMonth.getMonth() + 1);
+      renderCalendar();
+      if (haptic) haptic.selectionChanged();
+    });
+
+    // ========== Type Selection (Buy/Sell) ==========
+    const typeButtons = document.querySelectorAll('.type-btn');
+    typeButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        typeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('type').value = btn.dataset.type;
+        if (haptic) haptic.selectionChanged();
+      });
+    });
+
+    // ========== Form Submission ==========
     const form = document.getElementById('txForm');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -137,33 +389,40 @@
         totalTokenXgt: parseFloat(document.getElementById('xgt').value),
         goldWeightOunces: parseFloat(document.getElementById('toz').value),
         amountHkd: parseFloat(document.getElementById('hkd').value),
-        idempotencyKey: crypto.randomUUID() // SOTA: Dedup prevention
+        idempotencyKey: crypto.randomUUID()
       };
 
-      // Local validation (SOTA: Comprehensive checks)
+      // Validation
       let valid = true;
       if (!data.transactionDate) { document.getElementById('dateError').textContent = 'Select a date'; valid = false; }
-      if (!data.type) { document.getElementById('typeError').textContent = 'Select type'; valid = false; }
+      if (!data.type) { document.getElementById('typeError').textContent = 'Select Buy or Sell'; valid = false; }
       if (isNaN(data.totalTokenXgt) || data.totalTokenXgt <= 0) { document.getElementById('xgtError').textContent = 'Positive number >0'; valid = false; }
       if (isNaN(data.goldWeightOunces) || data.goldWeightOunces <= 0) { document.getElementById('tozError').textContent = 'Positive number >0'; valid = false; }
       if (isNaN(data.amountHkd) || data.amountHkd <= 0) { document.getElementById('hkdError').textContent = 'Positive number >0'; valid = false; }
 
-      if (!valid && haptic) haptic.notificationOccurred('error'); // SOTA: Error haptic
+      if (!valid && haptic) haptic.notificationOccurred('error');
 
       if (valid) {
         const confirmMsg = `Confirm: ${data.type.toUpperCase()} ${data.totalTokenXgt.toFixed(2)} XGT (${data.goldWeightOunces.toFixed(2)} toz) for ${data.amountHkd.toFixed(2)} HKD on ${data.transactionDate}?`;
         if (confirm(confirmMsg)) {
           tg.MainButton.setText('Submitting...').show();
-          tg.sendData(JSON.stringify(data)); // Sends to backend
-          if (haptic) haptic.notificationOccurred('success'); // SOTA: Success haptic
+          tg.sendData(JSON.stringify(data));
+          if (haptic) haptic.notificationOccurred('success');
           tg.MainButton.hide();
         }
       }
     });
 
-    // SOTA: Theme listener + default date (today in HKT)
+    // ========== Initialization ==========
     tg.onEvent('themeChanged', () => document.body.style.background = tg.themeParams.bg_color || var(--black-bg));
-    document.getElementById('date').value = new Date().toISOString().split('T')[0]; // Today default
+    
+    // Set today as default selected date
+    selectedDate = new Date();
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('selectedDate').textContent = 
+      selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    renderCalendar();
   </script>
 </body>
 </html>
