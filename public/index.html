@@ -459,13 +459,13 @@
         return;
       }
 
-      const confirmMsg = `Confirm ${data.type.toUpperCase()}?\n${data.totalTokenXgt} XGT\n${data.amountHkd} HKD\n${data.transactionDate}`;
-      if (confirm(confirmMsg)) {
+      // Send immediately; reply will appear in the chat (no confirm dialog - it often fails in Telegram in-app browser)
+      if (tg.MainButton) {
         tg.MainButton.setText('Submitting...').show();
-        tg.sendData(JSON.stringify(data));
-        if (haptic) haptic.notificationOccurred('success');
-        tg.MainButton.hide();
       }
+      tg.sendData(JSON.stringify(data));
+      if (haptic) haptic.notificationOccurred('success');
+      if (tg.MainButton) tg.MainButton.hide();
     });
 
     // ========== INIT ==========
